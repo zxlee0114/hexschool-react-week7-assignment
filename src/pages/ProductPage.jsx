@@ -3,6 +3,7 @@ import axios from "axios";
 import Pagination from "../components/pagination";
 import ProductModal from "../components/ProductModal";
 import DelProductModal from "../components/DelProductModal";
+import Toast from "../components/Toast";
 
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 const API_PATH = import.meta.env.VITE_API_PATH;
@@ -197,6 +198,8 @@ function ProductPage({ setIsAuth }) {
         isOpen={isDelProductModalOpen}
         setIsOpen={setIsDelProductModalOpen}
       />
+
+      <Toast />
     </>
   );
 }
