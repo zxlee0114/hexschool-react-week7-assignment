@@ -17,6 +17,15 @@ const toastSlice = createSlice({
         status,
       });
     },
+    removeMessage(state, action) {
+      const messageId = action.payload;
+      const index = state.messages.findIndex(
+        (message) => message.id === messageId
+      );
+      if (index !== -1) {
+        state.messages.splice(index, 1);
+      }
+    },
   },
 });
 
