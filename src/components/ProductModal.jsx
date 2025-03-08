@@ -345,6 +345,7 @@ function ProductModal({
                         name="origin_price"
                         id="origin_price"
                         type="number"
+                        min="0"
                         className="form-control"
                         placeholder="請輸入原價"
                       />
@@ -359,6 +360,7 @@ function ProductModal({
                         name="price"
                         id="price"
                         type="number"
+                        min="0"
                         className="form-control"
                         placeholder="請輸入售價"
                       />
