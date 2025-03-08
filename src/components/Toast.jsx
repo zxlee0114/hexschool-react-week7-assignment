@@ -1,10 +1,14 @@
 import { useEffect, useRef } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Toast as BsToast } from "bootstrap";
+import { removeMessage } from "../redux/slices/toastSlice";
+
+const TOAST_DURATION = 2000;
 
 function Toast() {
   const messages = useSelector((state) => state.toast.messages);
   const toastRefs = useRef({}); // { timestamp(id): DOM element }
+  const dispatch = useDispatch();
   useEffect(() => {
     messages.forEach((message) => {
       const toastElement = toastRefs.current[message.id];
@@ -12,9 +16,16 @@ function Toast() {
       if (toastElement) {
         const toastInstance = new BsToast(toastElement);
         toastInstance.show();
+
+        setTimeout(function () {
+          dispatch(removeMessage(message.id));
+        }, TOAST_DURATION);
       }
     });
   }, [messages]);
+  const handleDismissMessage = (id) => {
+    dispatch(removeMessage(id));
+  };
   return (
     <div className="position-fixed top-0 end-0 p-3" style={{ zIndex: 1000 }}>
       {messages.map((message) => (
@@ -35,6 +46,9 @@ function Toast() {
               {message.status === "success" ? "成功" : "失敗"}
             </strong>
             <button
+              onClick={() => {
+                handleDismissMessage(message.id);
+              }}
               type="button"
               className="btn-close"
               aria-label="Close"

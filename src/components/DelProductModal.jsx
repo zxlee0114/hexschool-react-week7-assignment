@@ -1,12 +1,15 @@
 import { useEffect, useRef } from "react";
 import axios from "axios";
 import { Modal } from "bootstrap";
+import { useDispatch } from "react-redux";
+import { pushMessage } from "../redux/slices/toastSlice";
 
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 const API_PATH = import.meta.env.VITE_API_PATH;
 
 function DelProductModal({ getProducts, tempProduct, isOpen, setIsOpen }) {
   const delProductModalRef = useRef(null);
+  const dispatch = useDispatch();
   useEffect(() => {
     new Modal(delProductModalRef.current, {
       backdrop: false,
@@ -28,8 +31,16 @@ function DelProductModal({ getProducts, tempProduct, isOpen, setIsOpen }) {
 
   const deleteProduct = async () => {
     try {
-      await axios.delete(
+      const response = await axios.delete(
         `${BASE_URL}/v2/api/${API_PATH}/admin/product/${tempProduct.id}`
+      );
+      const { message } = response.data;
+      console.log(message);
+      dispatch(
+        pushMessage({
+          text: message,
+          status: "success",
+        })
       );
     } catch (error) {
       console.log(error);

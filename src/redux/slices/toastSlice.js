@@ -29,5 +29,5 @@ const toastSlice = createSlice({
   },
 });
 
-export const { pushMessage } = toastSlice.actions;
+export const { pushMessage, removeMessage } = toastSlice.actions;
 export default toastSlice.reducer;
