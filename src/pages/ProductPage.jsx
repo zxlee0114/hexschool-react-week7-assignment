@@ -113,9 +113,29 @@ function ProductPage({ setIsAuth }) {
     setIsDelProductModalOpen(true);
   };
 
+  const handleLogout = async () => {
+    try {
+      await axios.post(`${BASE_URL}/v2/logout`);
+      setIsAuth(false);
+    } catch (error) {
+      alert("登出失敗");
+    }
+  };
+
   return (
     <>
       <div className="container py-5">
+        <div className="row mb-3">
+          <div className="justify-content-end">
+            <button
+              onClick={handleLogout}
+              type="button"
+              className="btn btn-secondary"
+            >
+              登出
+            </button>
+          </div>
+        </div>
         <div className="row">
           <div className="col">
             <div className="d-flex justify-content-between">
