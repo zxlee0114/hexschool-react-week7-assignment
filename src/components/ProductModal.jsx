@@ -1,6 +1,8 @@
 import { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import { Modal } from "bootstrap";
+import { useDispatch } from "react-redux";
+import { pushMessage } from "../redux/slices/toastSlice";
 
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 const API_PATH = import.meta.env.VITE_API_PATH;
@@ -14,6 +16,7 @@ function ProductModal({
 }) {
   const productModalRef = useRef(null);
   const [modalData, setModalData] = useState(tempProduct);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     setModalData({ ...tempProduct });
@@ -80,14 +83,13 @@ function ProductModal({
       getProducts();
       handleCloseProductModal();
     } catch (error) {
-      console.log(error);
-      alert("更新產品失敗");
+      console.error(error);
     }
   };
 
   const updateProduct = async () => {
     try {
-      await axios.put(
+      const response = await axios.put(
         `${BASE_URL}/v2/api/${API_PATH}/admin/product/${modalData.id}`,
         {
           data: {
@@ -98,25 +100,54 @@ function ProductModal({
           },
         }
       );
+      const { message } = response.data;
+      dispatch(
+        pushMessage({
+          text: message,
+          status: "success",
+        })
+      );
     } catch (error) {
-      console.log(error);
-      alert("編輯產品失敗");
+      const { message } = error.response.data;
+
+      dispatch(
+        pushMessage({
+          text: message.join("、"),
+          status: "failed",
+        })
+      );
     }
   };
 
   const createProduct = async () => {
     try {
-      await axios.post(`${BASE_URL}/v2/api/${API_PATH}/admin/product`, {
-        data: {
-          ...modalData,
-          origin_price: Number(modalData.origin_price),
-          price: Number(modalData.price),
-          is_enabled: modalData.is_enabled ? 1 : 0,
-        },
-      });
+      const response = await axios.post(
+        `${BASE_URL}/v2/api/${API_PATH}/admin/product`,
+        {
+          data: {
+            ...modalData,
+            origin_price: Number(modalData.origin_price),
+            price: Number(modalData.price),
+            is_enabled: modalData.is_enabled ? 1 : 0,
+          },
+        }
+      );
+      const { message } = response.data;
+      dispatch(
+        pushMessage({
+          text: message,
+          status: "success",
+        })
+      );
     } catch (error) {
-      console.log(error);
-      alert("新增產品失敗");
+      const { message } = error.response.data;
+
+      dispatch(
+        pushMessage({
+          text: message.join("、"),
+          status: "failed",
+        })
+      );
     }
   };
 
@@ -137,7 +168,14 @@ function ProductModal({
         imageUrl: uploadedImageUrl,
       });
     } catch (error) {
-      console.log(error);
+      const { message } = error.response.data;
+
+      dispatch(
+        pushMessage({
+          text: message.join("、"),
+          status: "failed",
+        })
+      );
     }
   };
 

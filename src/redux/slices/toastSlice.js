@@ -7,7 +7,7 @@ const toastSlice = createSlice({
   name: "toast",
   initialState,
   reducers: {
-    pushMassage(state, action) {
+    pushMessage(state, action) {
       const { text, status } = action.payload;
       const id = Date.now();
 
@@ -20,5 +20,5 @@ const toastSlice = createSlice({
   },
 });
 
-export const { pushMassage } = toastSlice.actions;
+export const { pushMessage } = toastSlice.actions;
 export default toastSlice.reducer;
